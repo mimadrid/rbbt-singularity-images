@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: mikisvaz/rbbt-basic
+
+%labels
+  Maintainer miguel.madrid@bsc.es
+
+
+%post
+  mv /usr/local/bin/rbbt /usr/local/bin/rbbt_
+  echo 'Writting symbolic links...'
+  echo '#!/bin/bash' > /usr/local/bin/rbbt
+  echo 'mkdir -p /home/rbbt' >> /usr/local/bin/rbbt
+  echo 'mkdir -p $(pwd)/singularity_cache/{.rbbt,.ruby_inline,workflows}' >> /usr/local/bin/rbbt
+  echo '[ ! -e /home/rbbt/.ruby_inline ] && ln -s $(pwd)/singularity_cache/.ruby_inline /home/rbbt/.ruby_inline' >> /usr/local/bin/rbbt
+  echo '[ ! -e /home/rbbt/.rbbt ] && ln -s $(pwd)/singularity_cache/.rbbt /home/rbbt/.rbbt' >> /usr/local/bin/rbbt
+  echo '[ ! -e /home/rbbt/.rbbt/workflows ] && ln -s $(pwd)/singularity_cache/workflows /home/rbbt/.rbbt/workflows' >> /usr/local/bin/rbbt
+  echo 'rbbt_ "$@"' >> /usr/local/bin/rbbt
+  chmod o+x /usr/local/bin/rbbt
+
